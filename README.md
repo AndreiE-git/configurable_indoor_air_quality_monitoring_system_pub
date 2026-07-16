@@ -17,7 +17,7 @@ The **battery-powered design** enables flexible deployment, while a custom **web
 
 **FIGURE: Project architecture**
 
-<img src="docs/introduction/project_architecture.jpeg" width="25%" height="auto">
+<img src="docs/introduction/project_architecture.jpeg" width="45%" height="auto">
 
 
 <!-- ______________________________________________________________________________________________________________________________________________________ -->
@@ -101,7 +101,7 @@ The master and slave board schematics, together with the master PCB layout, were
 
 **FIGURE: Master board schematic**
 
-<img src="docs/hardware_implementation/master_board_schematic.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_schematic.jpeg" width="100%" height="auto">
 
 The master board is powered by **two 18650 Li-ion cells in series** ( 7.4 V nominal ).
 A reverse-polarity protection diode and external rocker switch provide basic power protection and control.
@@ -122,24 +122,24 @@ The board is mounted using **three M3×8 screws**.
 
 **FIGURE: Master board layout ( top view )**
 
-<img src="docs/hardware_implementation/master_board_layout.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_layout.jpeg" width="50%" height="auto">
 
 **FIGURE: Master board 3D model ( top view )**
 
-<img src="docs/hardware_implementation/master_board_3d_model_top.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_3d_model_top.jpeg" width="50%" height="auto">
 
 **FIGURE: Master board 3D model ( bottom view )**
 
-<img src="docs/hardware_implementation/master_board_3d_model_bot.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_3d_model_bot.jpeg" width="50%" height="auto">
 
 
 **FIGURE: Master board after soldering ( top view )**
 
-<img src="docs/hardware_implementation/master_board_soldered_top.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_soldered_top.jpeg" width="50%" height="auto">
 
 **FIGURE: Master board after soldering ( bottom view )**
 
-<img src="docs/hardware_implementation/master_board_soldered_bot.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_soldered_bot.jpeg" width="50%" height="auto">
 
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
@@ -150,7 +150,7 @@ A **bidirectional level shifter** is used for serial communication with the 3.3 
 
 **FIGURE: Slave 1 board schematic**
 
-<img src="docs/hardware_implementation/slave_board_1_schematic.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/slave_board_1_schematic.png" width="100%" height="auto">
 
 **Slave board 1** integrates:
 
@@ -161,7 +161,7 @@ The ADT7410 address pins ( A0 and A1 ) are connected to GND, resulting in the de
 
 **FIGURE: Slave 2 board schematic**
 
-<img src="docs/hardware_implementation/slave_board_2_schematic.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/slave_board_2_schematic.png" width="100%" height="auto">
 
 **Slave board 2** integrates:
 
@@ -172,19 +172,19 @@ Both slave boards were assembled on **perforated prototyping PCBs** with hand-wi
 
 **FIGURE: Slave 1 board after soldering ( top view )**
 
-<img src="docs/hardware_implementation/slave_board_1_soldered_top.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/slave_board_1_soldered_top.png" width="50%" height="auto">
 
 **FIGURE: Slave 1 board after soldering ( bottom view )**
 
-<img src="docs/hardware_implementation/slave_board_1_soldered_bot.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/slave_board_1_soldered_bot.png" width="50%" height="auto">
 
 **FIGURE: Slave 2 board after soldering ( top view )**
 
-<img src="docs/hardware_implementation/slave_board_2_soldered_top.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/slave_board_2_soldered_top.png" width="50%" height="auto">
 
 **FIGURE: Slave 2 board after soldering ( bottom view )**
 
-<img src="docs/hardware_implementation/slave_board_2_soldered_bot.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/slave_board_2_soldered_bot.png" width="50%" height="auto">
 
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
@@ -199,32 +199,32 @@ The enclosure geometry was designed with sufficient board clearance while minimi
 
 **FIGURE: Middle part ( front view )**
 
-<img src="docs/hardware_implementation/3d_case_middle_part_1.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/3d_case_middle_part_1.png" width="50%" height="auto">
 
 **FIGURE: Middle part ( back view )**
 
-<img src="docs/hardware_implementation/3d_case_middle_part_2.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/3d_case_middle_part_2.png" width="50%" height="auto">
 
 The **bottom section** houses the battery pack and rocker switch.
 A central guide rail aligns the middle section, while heat-set inserts provide secure mechanical fastening.
 
 **FIGURE: Bottom part ( left view )**
 
-<img src="docs/hardware_implementation/3d_case_bot_part_1.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/3d_case_bot_part_1.png" width="50%" height="auto">
 
 **FIGURE: Bottom part ( right view )**
 
-<img src="docs/hardware_implementation/3d_case_bot_part_2.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/3d_case_bot_part_2.png" width="50%" height="auto">
 
 The **top section** closes the enclosure and includes an integrated retaining feature to secure the battery pack.
 
 **FIGURE: Top part ( top view )**
 
-<img src="docs/hardware_implementation/3d_case_top_part_1.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/3d_case_top_part_1.png" width="50%" height="auto">
 
 **FIGURE: Top part ( bottom view )**
 
-<img src="docs/hardware_implementation/3d_case_top_part_2.png" width="25%" height="auto">
+<img src="docs/hardware_implementation/3d_case_top_part_2.png" width="50%" height="auto">
 
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
@@ -234,11 +234,11 @@ The completed device is shown below from the **left and top views**.
 
 **FIGURE: Final product ( top view )**
 
-<img src="docs/hardware_implementation/master_board_final_product_2.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_final_product_2.jpeg" width="60%" height="auto">
 
 **FIGURE: Final product ( left view )**
 
-<img src="docs/hardware_implementation/master_board_final_product_1.jpeg" width="25%" height="auto">
+<img src="docs/hardware_implementation/master_board_final_product_1.jpeg" width="60%" height="auto">
 
 
 <!-- ______________________________________________________________________________________________________________________________________________________ -->
@@ -254,7 +254,7 @@ If a slave does not respond within **5 seconds**, the master enters a timeout st
 
 **FIGURE: Serial communication state machine**
 
-<img src="docs/software_implementation/serial_comm_state_machine.jpeg" width="25%" height="auto">
+<img src="docs/software_implementation/serial_comm_state_machine.jpeg" width="50%" height="auto">
 
 Two UART commands are implemented:
 
@@ -800,7 +800,7 @@ Sensor data acquired by the master board and published to the MQTT broker is vis
 
 **FIGURE: Node-RED web dashboard**
 
-<img src="docs/software_implementation/node_red_webpage_dashboard.jpeg" width="25%" height="auto">
+<img src="docs/software_implementation/node_red_webpage_dashboard.jpeg" width="70%" height="auto">
 
 The dashboard was developed using **Node-RED** and provides real-time visualization of the acquired sensor data.
 
@@ -809,14 +809,14 @@ The system consists of two MQTT clients—the ESP32 and Node-RED—which exchang
 
 **FIGURE: MQTT architecture**
 
-<img src="docs/software_implementation/mqtt_structure.jpeg" width="25%" height="auto">
+<img src="docs/software_implementation/mqtt_structure.jpeg" width="60%" height="auto">
 
 Three MQTT topics are used to transmit **temperature, TVOC, and sound** measurements.
 The ESP32 publishes the sensor data, while the Node-RED dashboard subscribes to the corresponding topics for visualization.
 
 **FIGURE: Node Red webpage flow**
 
-<img src="docs/software_implementation/node_red_webpage_flow.png" width="25%" height="auto">
+<img src="docs/software_implementation/node_red_webpage_flow.png" width="50%" height="auto">
 
 Node-RED flow:
 
