@@ -1,6 +1,6 @@
 
 <div align="center">
-    <h1>Configurable Indoor Air Quality Monitoring System ( 2023 )</h1>
+    <h1>Configurable Indoor Air Quality Monitoring System <br>( 2023 )</h1>
     <img src="docs/introduction/introduction.jpeg" width="65%" height="auto">
 </div>
 
