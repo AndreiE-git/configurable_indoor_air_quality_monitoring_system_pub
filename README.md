@@ -1,254 +1,273 @@
 
 <div align="center">
-    <img src="docs/introduction/introduction.jpeg" width="65%" height="auto">
     <h1>Configurable Indoor Air Quality Monitoring System ( 2023 )</h1>
+    <img src="docs/introduction/introduction.jpeg" width="65%" height="auto">
 </div>
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ INTRODUCTION -->
-# :rocket: 1. Introduction
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 🚀 Introduction
 
-This project developed the infrastructure for a configurable indoor air quality monitoring system using modular, wirelessly reconfigurable devices that can be deployed anywhere indoors and adapted to changing requirements without reprogramming.
+This project implements a **configurable, modular, and wireless indoor air quality monitoring system** for real-time environmental monitoring.
 
-Each device consists of a modular sensor board for environmental monitoring and a transmitter board that collects sensor data and sends it to a server via a serial interface.
-Its compact, battery-powered design enables flexible placement, while a custom web dashboard provides real-time data visualization.
+Each device consists of a **sensor board** for environmental measurements and a **transmitter board** that collects sensor data and sends it to a server via a serial interface.
+The **battery-powered design** enables flexible deployment, while a custom **web dashboard** provides real-time data visualization and device configuration.
 
 **Project demo**: [ demo_link ]( https://drive.google.com/file/d/12pxGG4WmBNYgOO-bVUk5fnq6-0USTvlY/view )
 
-
 **FIGURE: Project architecture**
 
-<img src="docs/introduction/project_architecture.jpeg" width="45%" height="auto">
+<img src="docs/introduction/project_architecture.jpeg" width="25%" height="auto">
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ TABLE OF CONTENT -->
-# :ledger:Table of content
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 📒 Table of Content
 
-- [:rocket: 1. Introduction](#rocket-1-introduction)
-- [:ledger:Table of content](#ledgertable-of-content)
-- [:gear: 2. Hardware description](#gear-2-hardware-description)
-- [:wrench: 3. Hardware implementation](#wrench-3-hardware-implementation)
-  - [3.1 Schematic and layouts](#31-schematic-and-layouts)
-    - [3.1.1 ESP32 Master Board](#311-esp32-master-board)
-    - [3.1.2 ATMEGA328P slave boards](#312-atmega328p-slave-boards)
-  - [3.2 3D Enclosure](#32-3d-enclosure)
-  - [3.3 Final Product](#33-final-product)
-- [:sparkles: 4. Software implementation](#sparkles-4-software-implementation)
-  - [4.1 MCU Firmware](#41-mcu-firmware)
-    - [4.1.1 ESP32 Firmware](#411-esp32-firmware)
-    - [4.1.2 ATmega328P Firmware](#412-atmega328p-firmware)
-  - [4.2 Node-RED](#42-node-red)
-- [:checkered\_flag: 5. Conclusion](#checkered_flag-5-conclusion)
-- [:books: 5. Resources](#books-5-resources)
+- [🚀 Introduction](#-introduction)
+- [📒 Table of Content](#-table-of-content)
+- [📄 System Architecture](#-system-architecture)
+- [⚙️ Components](#️-components)
+  - [Master Board](#master-board)
+  - [Slave Board 1](#slave-board-1)
+  - [Slave Board 2](#slave-board-2)
+- [🧰 Hardware Implementation](#-hardware-implementation)
+  - [Schematic and Layout](#schematic-and-layout)
+    - [ESP32 Master Board](#esp32-master-board)
+    - [ATmega328P Slave Boards](#atmega328p-slave-boards)
+  - [3D Enclosure](#3d-enclosure)
+  - [Final Product](#final-product)
+- [💻 Software Implementation](#-software-implementation)
+  - [MCU Firmware](#mcu-firmware)
+    - [ESP32 Firmware](#esp32-firmware)
+    - [ATmega328P Firmware](#atmega328p-firmware)
+  - [Node-RED](#node-red)
+- [🏁 Conclusion](#-conclusion)
+- [📚 References](#-references)
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ HARDWARE DESCRIPTION -->
-# :gear: 2. Hardware description
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 📄 System Architecture
 
 The system consists of two board types:
 
-* **Slave board** – acquires environmental data from sensors
-* **Master board** – acquires data from sensor boards and transmits it to the server
+* **Master board** – collects data from the slave boards and transmits it to the server.
+* **Slave boards** – acquire environmental data from connected sensors.
 
-Each board is built around its own microcontroller ( MCU ).
-To validate the design, three boards were developed: one master board and two slave boards, whose main components are listed below:
-
-1. Master board
-    - 1x [ ESP32 board ]( https://www.emag.ro/placa-dezvoltare-esp-wroom-32-esp-32s-ai011-s332/pd/D3NF9VBBM/?ref=history-shopping_346242005_38837_1 )
-2. Slave board 1
-    - 1x [ Arduino Nano board ]( https://www.optimusdigital.ro/ro/compatibile-cu-arduino-nano/1686-placa-de-dezvoltare-compatibila-cu-arduino-nano-atmega328p-i-ch340.html ) ( with ATMEGA328P MCU )
-    - 1x [ ADT7410 module ]( https://www.optimusdigital.ro/ro/senzori-senzori-de-temperatura/7542-modul-senzor-de-temperatura-adafruit-cu-acuratee-ridicata-adt7410-i2c.html ) ( high accuracy digital temperature sensor )
-    - 1x [ MQ2 module ]( https://www.optimusdigital.ro/ro/senzori-de-gaze/107-modul-senzor-gas-mq-2.html?search_query=mq2&results=1 ) ( analog gas sensor )
-    - 1x [ level shifter module ]( https://www.optimusdigital.ro/ro/interfata-convertoare-de-niveluri/182-translator-de-nivel-bidirectional-cu-2-canale.html )
-3. Slave board 2
-    - 1x [ Arduino Nano board ]( https://www.optimusdigital.ro/ro/compatibile-cu-arduino-nano/1686-placa-de-dezvoltare-compatibila-cu-arduino-nano-atmega328p-i-ch340.html )
-    - 1x [ Microphone module ]( https://www.techonicsltd.com/product/microphone-sound-sensor-module-compatible-with-official-arduino-boards/ ) ( sound sensor )
-    - 1x [ DS18B20 module ]( https://www.optimusdigital.ro/ro/senzori-senzori-de-temperatura/172-modul-senzor-de-temperatura-ds18b20.html ) ( digital temperature sensor )
-    - 1x [ level shifter module ]( https://www.optimusdigital.ro/ro/interfata-convertoare-de-niveluri/182-translator-de-nivel-bidirectional-cu-2-canale.html )
+Each board is built around its own microcontroller ( MCU ). Three boards were developed to validate the system: **one master board and two slave boards**.
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ HARDWARE DESCRIPTION -->
-# :wrench: 3. Hardware implementation
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# ⚙️ Components
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## Master Board
 
-## 3.1 Schematic and layouts
+| Component               | Quantity | Purpose                                                           | Link                                                                                                                                |
+| :---------------------- | :------: | :---------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
+| ESP32 development board |     1    | Master MCU; collects sensor data and communicates with the server | [ Link ](https://www.emag.ro/placa-dezvoltare-esp-wroom-32-esp-32s-ai011-s332/pd/D3NF9VBBM/?ref=history-shopping_346242005_38837_1) |
 
-The schematics for the master and slave boards, along with the master board PCB layout, were designed in **Altium Designer**, a professional electronic design automation ( EDA ) tool for schematic capture and PCB development.
+
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## Slave Board 1
+
+| Component                   | Quantity | Purpose                                       | Link                                                                                                                                                      |
+| :-------------------------- | :------: | :-------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Arduino Nano ( ATmega328P ) |     1    | Slave MCU; interfaces with sensors            | [ Link ](https://www.optimusdigital.ro/ro/compatibile-cu-arduino-nano/1686-placa-de-dezvoltare-compatibila-cu-arduino-nano-atmega328p-i-ch340.html)          |
+| ADT7410 module              |     1    | High-accuracy digital temperature measurement | [ Link ](https://www.optimusdigital.ro/ro/senzori-senzori-de-temperatura/7542-modul-senzor-de-temperatura-adafruit-cu-acuratee-ridicata-adt7410-i2c.html) |
+| MQ-2 module                 |     1    | Analog gas concentration measurement          | [ Link ](https://www.optimusdigital.ro/ro/senzori-de-gaze/107-modul-senzor-gas-mq-2.html?search_query=mq2&results=1)                                      |
+| Level shifter module        |     1    | Logic-level voltage conversion                | [ Link ](https://www.optimusdigital.ro/ro/interfata-convertoare-de-niveluri/182-translator-de-nivel-bidirectional-cu-2-canale.html)                       |
 
 
-### 3.1.1 ESP32 Master Board
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## Slave Board 2
 
-The master board is powered by a battery pack consisting of two 18650 Li-ion cells connected in series, providing a nominal input voltage of approximately 7.4 V.
-A reverse-polarity protection diode and an external rocker switch ensure safe and convenient operation.
+| Component                   | Quantity | Purpose                            | Link                                                                                                                                             |
+| :-------------------------- | :------: | :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Arduino Nano ( ATmega328P ) |     1    | Slave MCU; interfaces with sensors | [ Link ](https://www.optimusdigital.ro/ro/compatibile-cu-arduino-nano/1686-placa-de-dezvoltare-compatibila-cu-arduino-nano-atmega328p-i-ch340.html) |
+| Microphone module           |     1    | Ambient sound level measurement    | [ Link ](https://www.techonicsltd.com/product/microphone-sound-sensor-module-compatible-with-official-arduino-boards/)                           |
+| DS18B20 module              |     1    | Digital temperature measurement    | [ Link ](https://www.optimusdigital.ro/ro/senzori-senzori-de-temperatura/172-modul-senzor-de-temperatura-ds18b20.html)                           |
+| Level shifter module        |     1    | Logic-level voltage conversion     | [ Link ](https://www.optimusdigital.ro/ro/interfata-convertoare-de-niveluri/182-translator-de-nivel-bidirectional-cu-2-canale.html)              |
 
-To support a wide range of sensors, the board provides both **3.3 V** and **5 V** power rails.
-Because the system is battery-powered, linear regulators were avoided due to their poor efficiency at converting 7.4 V to lower voltages.
-Instead, two **MCP16311** synchronous buck regulators ( 1 A output ) generate the required voltages with high efficiency across a wide load range.
-Each regulator integrates both switching MOSFETs and operates at a switching frequency of **500 kHz**.
 
-An **ESP32 development board** is mounted via dual female headers.
-The battery voltage is monitored through a resistor divider connected to an ADC input, while connector **J1** supplies power to and provides serial communication with the slave board.
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 🧰 Hardware Implementation
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## Schematic and Layout
 
-The complete master board schematic is shown below.
+The master and slave board schematics, together with the master PCB layout, were designed in **Altium Designer**.
 
+
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+### ESP32 Master Board
 
 **FIGURE: Master board schematic**
 
-<img src="docs/hardware_implementation/master_board_schematic.jpeg" width="100%" height="auto">
+<img src="docs/hardware_implementation/master_board_schematic.jpeg" width="25%" height="auto">
 
+The master board is powered by **two 18650 Li-ion cells in series** ( 7.4 V nominal ).
+A reverse-polarity protection diode and external rocker switch provide basic power protection and control.
 
-The master board PCB layout was optimized for a compact footprint and single-sided manufacturing, minimizing the number of wire bridges required.
-It is mounted using three M3×8 screws, and includes three optional LEDs for debugging and status indication.
+To support different sensor modules, the board provides both **3.3 V and 5 V power rails**.
+Since the system is battery-powered, **MCP16311 synchronous buck regulators** were used instead of linear regulators to improve power efficiency.
 
+The board includes:
+
+* **ESP32 development board** mounted through dual female headers
+* **Battery voltage monitoring** through an ADC-connected resistor divider
+* **Slave-board connector ( J1 )** for power and serial communication
+* **3.3 V and 5 V regulated power rails**
+* **Debug/status LEDs**
+
+The PCB layout was optimized for a **compact footprint and single-sided manufacturing**, minimizing the number of wire bridges.
+The board is mounted using **three M3×8 screws**.
 
 **FIGURE: Master board layout ( top view )**
 
-<img src="docs/hardware_implementation/master_board_layout.jpeg" width="50%" height="auto">
+<img src="docs/hardware_implementation/master_board_layout.jpeg" width="25%" height="auto">
 
 **FIGURE: Master board 3D model ( top view )**
 
-<img src="docs/hardware_implementation/master_board_3d_model_top.jpeg" width="50%" height="auto">
+<img src="docs/hardware_implementation/master_board_3d_model_top.jpeg" width="25%" height="auto">
 
 **FIGURE: Master board 3D model ( bottom view )**
 
-<img src="docs/hardware_implementation/master_board_3d_model_bot.jpeg" width="50%" height="auto">
+<img src="docs/hardware_implementation/master_board_3d_model_bot.jpeg" width="25%" height="auto">
 
 
 **FIGURE: Master board after soldering ( top view )**
 
-<img src="docs/hardware_implementation/master_board_soldered_top.jpeg" width="50%" height="auto">
+<img src="docs/hardware_implementation/master_board_soldered_top.jpeg" width="25%" height="auto">
 
 **FIGURE: Master board after soldering ( bottom view )**
 
-<img src="docs/hardware_implementation/master_board_soldered_bot.jpeg" width="50%" height="auto">
+<img src="docs/hardware_implementation/master_board_soldered_bot.jpeg" width="25%" height="auto">
 
 
-### 3.1.2 ATMEGA328P slave boards
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+### ATmega328P Slave Boards
 
-The slave boards are based on the **Arduino Nano ( ATmega328P )**, which operates at **5 V** logic levels.
-Since the master board's **ESP32** uses **3.3 V** logic, a bidirectional level shifter is used to ensure safe serial communication between the two boards.
-
-The **ADT7410** temperature sensor communicates over the **I²C** interface and supports two interrupt outputs.
-Its address pins ( **A0** and **A1** ) are tied to **GND**, configuring the device to the default I²C address of **0x48**.
-
-The **MQ-2** gas sensor provides an analog output proportional to the concentration of combustible gases, including propane, hydrogen, and methane.
-
+The slave boards are based on the **Arduino Nano ( ATmega328P )** and operate at **5 V** logic levels.
+A **bidirectional level shifter** is used for serial communication with the 3.3 V ESP32 master.
 
 **FIGURE: Slave 1 board schematic**
 
-<img src="docs/hardware_implementation/slave_board_1_schematic.png" width="100%" height="auto">
+<img src="docs/hardware_implementation/slave_board_1_schematic.png" width="25%" height="auto">
 
+**Slave board 1** integrates:
 
-The **sound sensor** provides an analog output proportional to the detected sound level, while the **DS18B20** digital temperature sensor communicates using the **1-Wire** protocol.
+* **ADT7410** digital temperature sensor using **I²C**
+* **MQ-2** analog gas sensor
 
+The ADT7410 address pins ( A0 and A1 ) are connected to GND, resulting in the default **I²C address 0x48**.
 
 **FIGURE: Slave 2 board schematic**
 
-<img src="docs/hardware_implementation/slave_board_2_schematic.png" width="100%" height="auto">
+<img src="docs/hardware_implementation/slave_board_2_schematic.png" width="25%" height="auto">
 
+**Slave board 2** integrates:
 
-The slave boards were assembled on two perforated prototyping PCBs, with all electrical connections hand-wired.
+* **DS18B20** digital temperature sensor using **1-Wire**
+* **Sound sensor** with analog output
 
+Both slave boards were assembled on **perforated prototyping PCBs** with hand-wired connections.
 
 **FIGURE: Slave 1 board after soldering ( top view )**
 
-<img src="docs/hardware_implementation/slave_board_1_soldered_top.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/slave_board_1_soldered_top.png" width="25%" height="auto">
 
 **FIGURE: Slave 1 board after soldering ( bottom view )**
 
-<img src="docs/hardware_implementation/slave_board_1_soldered_bot.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/slave_board_1_soldered_bot.png" width="25%" height="auto">
 
 **FIGURE: Slave 2 board after soldering ( top view )**
 
-<img src="docs/hardware_implementation/slave_board_2_soldered_top.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/slave_board_2_soldered_top.png" width="25%" height="auto">
 
 **FIGURE: Slave 2 board after soldering ( bottom view )**
 
-<img src="docs/hardware_implementation/slave_board_2_soldered_bot.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/slave_board_2_soldered_bot.png" width="25%" height="auto">
 
 
-## 3.2 3D Enclosure
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## 3D Enclosure
 
 The enclosure was designed in **Fusion 360** and prepared for 3D printing using **PrusaSlicer**.
 It consists of three parts and houses the master board, slave board, battery pack, and rocker switch.
 
-The **middle section** serves as the main structural component, with the master and slave boards mounted using seven M3 screws and interconnected by a cable.
-A 3 mm clearance is maintained on both sides of the boards; to avoid the need for printing supports, the spacing on one side is achieved using separate spacer components.
-
+The **middle section** provides the main structural support for the electronics.
+The master and slave boards are secured using M3 screws and interconnected by a cable.
+The enclosure geometry was designed with sufficient board clearance while minimizing the need for printing supports.
 
 **FIGURE: Middle part ( front view )**
 
-<img src="docs/hardware_implementation/3d_case_middle_part_1.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/3d_case_middle_part_1.png" width="25%" height="auto">
 
 **FIGURE: Middle part ( back view )**
 
-<img src="docs/hardware_implementation/3d_case_middle_part_2.png" width="50%" height="auto">
-
+<img src="docs/hardware_implementation/3d_case_middle_part_2.png" width="25%" height="auto">
 
 The **bottom section** houses the battery pack and rocker switch.
-The middle section slides into place using a central guide rail, while four threaded heat-set inserts provide secure mounting for the enclosure screws.
-
+A central guide rail aligns the middle section, while heat-set inserts provide secure mechanical fastening.
 
 **FIGURE: Bottom part ( left view )**
 
-<img src="docs/hardware_implementation/3d_case_bot_part_1.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/3d_case_bot_part_1.png" width="25%" height="auto">
 
 **FIGURE: Bottom part ( right view )**
 
-<img src="docs/hardware_implementation/3d_case_bot_part_2.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/3d_case_bot_part_2.png" width="25%" height="auto">
 
-
-The **top section** closes the enclosure and is secured with four M3×10 screws.
-An integrated retaining feature keeps the battery pack firmly in place.
-
+The **top section** closes the enclosure and includes an integrated retaining feature to secure the battery pack.
 
 **FIGURE: Top part ( top view )**
 
-<img src="docs/hardware_implementation/3d_case_top_part_1.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/3d_case_top_part_1.png" width="25%" height="auto">
 
 **FIGURE: Top part ( bottom view )**
 
-<img src="docs/hardware_implementation/3d_case_top_part_2.png" width="50%" height="auto">
+<img src="docs/hardware_implementation/3d_case_top_part_2.png" width="25%" height="auto">
 
 
-## 3.3 Final Product
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## Final Product
 
-The completed device is shown below in the left and top views.
-
+The completed device is shown below from the **left and top views**.
 
 **FIGURE: Final product ( top view )**
 
-<img src="docs/hardware_implementation/master_board_final_product_2.jpeg" width="60%" height="auto">
+<img src="docs/hardware_implementation/master_board_final_product_2.jpeg" width="25%" height="auto">
 
 **FIGURE: Final product ( left view )**
 
-<img src="docs/hardware_implementation/master_board_final_product_1.jpeg" width="60%" height="auto">
+<img src="docs/hardware_implementation/master_board_final_product_1.jpeg" width="25%" height="auto">
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ SOFTWARE DESCRIPTION -->
-# :sparkles: 4. Software implementation
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 💻 Software Implementation
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## MCU Firmware
 
-## 4.1 MCU Firmware
+Communication between the master and slave boards uses **UART at 115200 baud with 8N1 configuration**.
+The **master controls all communication**, requesting sensor configuration during startup and periodically polling the slave boards for measurements.
 
-Communication between the master and slave boards is implemented using the **UART** protocol at **115200 baud, 8 data bits, no parity, and 1 stop bit ( 8N1 )**.
-All communication is initiated by the master.
-During startup, the master requests the list of parameters supported by the slave boards, then periodically reads and processes the sensor data.
-If the slave fails to respond within **5 seconds**, the master enters a timeout state and halts communication.
+A **state machine** manages the communication process.
+If a slave does not respond within **5 seconds**, the master enters a timeout state and stops communication with that slave.
 
-The communication state machine is shown in the figure below.
+**FIGURE: Serial communication state machine**
 
+<img src="docs/software_implementation/serial_comm_state_machine.jpeg" width="25%" height="auto">
 
-**FIGURE: Serial comm state machine**
+Two UART commands are implemented:
 
-<img src="docs/software_implementation/serial_comm_state_machine.jpeg" width="50%" height="auto">
-
-
-Two UART commands are implemented: **`UART_CMD_READ_SENSORS_STATUS`**, which retrieves the sensor configuration during startup, and **`UART_CMD_READ_SENSORS_DATA`**, which requests the latest sensor measurements.
-Both commands are 2 bytes long, while their corresponding responses are 4 bytes and 8 bytes, respectively.
+| Command                        | Purpose                                      | Request | Response |
+| :----------------------------- | :------------------------------------------- | :-----: | :------: |
+| `UART_CMD_READ_SENSORS_STATUS` | Retrieve sensor configuration during startup | 2 bytes |  4 bytes |
+| `UART_CMD_READ_SENSORS_DATA`   | Request the latest sensor measurements       | 2 bytes |  8 bytes |
 
 
-### 4.1.1 ESP32 Firmware
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+### ESP32 Firmware
 
-The ESP32 firmware requires the **Wi-Fi SSID**, **password**, and **MQTT broker IP address** to establish a network connection and communicate with the MQTT broker.
+The ESP32 firmware is configured with the **Wi-Fi SSID**, **password**, and **MQTT broker IP address** to establish the network connection and publish sensor data through **MQTT**.
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// WIFI SETUP
@@ -319,7 +338,7 @@ void reconnect()
 }
 ```
 
-The serial communication can be configured by modifying the macros below:
+The serial communication can be configured by modifying the following macros:
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SERIAL COMM SETUP
@@ -389,8 +408,8 @@ typedef struct
 UART_COM_STRUCT UART_com;
 ```
 
-The serial communication is initialized by sending the **`UART_CMD_READ_SENSORS_STATUS`** command to retrieve the slave board's capabilities.
-If no valid response is received, the master board enters a timeout state and halts operation.
+At startup, the master sends **`UART_CMD_READ_SENSORS_STATUS`** to retrieve the slave board's supported sensors.
+If no valid response is received within the configured timeout, the master enters the **timeout state** and halts operation.
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETUP FUNCTION
@@ -526,11 +545,12 @@ void loop()
 }
 ```
 
-### 4.1.2 ATmega328P Firmware
 
-The same firmware is used for both slave boards. The target board is selected at compile time by defining either **`USE_SLAVE_1`** or **`USE_SLAVE_2`**.
-Exactly one of these macros must be defined; defining both or neither results in a compilation error.
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+### ATmega328P Firmware
 
+The same firmware is used for both slave boards, with the target board selected at compile time using either **`USE_SLAVE_1`** or **`USE_SLAVE_2`**.
+Exactly one macro must be defined; defining both or neither results in a **compilation error**.
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETUP SLAVE TO BUILD
@@ -618,7 +638,7 @@ The following functions are responsible for acquiring data from the correspondin
 #endif
 ```
 
-The function below is used to initialize all sensors that are being used.
+The function below initializes all **configured sensors**.
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// INIT ALL SENSOR CONFIG
@@ -643,7 +663,7 @@ void init_all_sensor_config()
 }
 ```
 
-The serial communication is implemented using the following macros:
+Serial communication is configured using the following macros:
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SERIAL MACROS AND VARIABLES
@@ -678,7 +698,7 @@ typedef struct
 SERIAL_COM serial_com;
 ```
 
-The UART protocol is started with the 115200 baud rate and the sensors are initialized at startup.
+The **UART interface is initialized at 115200 baud**, and all configured sensors are initialized at startup.
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETUP FUNCTION
@@ -691,7 +711,7 @@ void setup()
 }
 ```
 
-The commands are processed as they are received. The data from the sensors is read as it is requested.
+Commands are processed upon reception, and sensor data is read on request.
 
 ``` c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// LOOP FUNCTION
@@ -772,53 +792,49 @@ void loop()
 }
 ```
 
-## 4.2 Node-RED
 
-The data acquired by the master board and published to the MQTT broker is visualized through a **Node-RED Dashboard**, shown below.
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+## Node-RED
 
+Sensor data acquired by the master board and published to the MQTT broker is visualized through a **Node-RED Dashboard**.
 
-**FIGURE: Node Red webpage dashboard**
+**FIGURE: Node-RED web dashboard**
 
-<img src="docs/software_implementation/node_red_webpage_dashboard.jpeg" width="70%" height="auto">
+<img src="docs/software_implementation/node_red_webpage_dashboard.jpeg" width="25%" height="auto">
 
+The dashboard was developed using **Node-RED** and provides real-time visualization of the acquired sensor data.
 
-The dashboard was developed using **Node-RED**, a flow-based programming tool for creating web applications through a browser-based editor.
-
-Communication between the **ESP32** and the dashboard is established over **TCP/IP** using the **MQTT** protocol.
-The system consists of two MQTT clients—the ESP32 and the dashboard—which exchange messages through a locally hosted **MQTT broker** running on the laptop.
-
+Communication between the **ESP32** and dashboard uses **MQTT over TCP/IP**.
+The system consists of two MQTT clients—the ESP32 and Node-RED—which exchange messages through a locally hosted **MQTT broker** running on the laptop.
 
 **FIGURE: MQTT architecture**
 
-<img src="docs/software_implementation/mqtt_structure.jpeg" width="60%" height="auto">
+<img src="docs/software_implementation/mqtt_structure.jpeg" width="25%" height="auto">
 
-
-**MQTT** is a lightweight messaging protocol designed for IoT applications.
-Clients communicate exclusively with the broker by publishing data to or subscribing to **topics**, without needing direct connections to other clients.
-In this project, three topics were implemented to transmit **temperature**, **TVOC**, and **sound** data.
+Three MQTT topics are used to transmit **temperature, TVOC, and sound** measurements.
+The ESP32 publishes the sensor data, while the Node-RED dashboard subscribes to the corresponding topics for visualization.
 
 **FIGURE: Node Red webpage flow**
 
-<img src="docs/software_implementation/node_red_webpage_flow.png" width="50%" height="auto">
+<img src="docs/software_implementation/node_red_webpage_flow.png" width="25%" height="auto">
 
-
-The Node-RED flow code:
+Node-RED flow:
 
 ``` json
 [ { "id": "156fbaa406ad8123", "type": "tab", "label": "Flow 1", "disabled": false, "info": "", "env": [] }, { "id": "203987ec71ee9f87", "type": "mqtt in", "z": "156fbaa406ad8123", "name": "ESP32/temp", "topic": "ESP32/temp", "qos": "2", "datatype": "auto-detect", "broker": "a03b8463c0d7b983", "nl": false, "rap": true, "rh": 0, "inputs": 0, "x": 370, "y": 300, "wires": [ [ "9a7d31c60c80b677", "3804aaebb1665203" ] ] }, { "id": "a187927df009e949", "type": "ui_gauge", "z": "156fbaa406ad8123", "name": "TVOC", "group": "f6d1c6bb403af6e6", "order": 0, "width": 0, "height": 0, "gtype": "wave", "title": "TVOC gauge", "label": "units", "format": "{{value}}", "min": 0, "max": "1023", "colors": [ "#00b500", "#e6e600", "#ca3838" ], "seg1": "", "seg2": "", "diff": false, "className": "", "x": 530, "y": 380, "wires": [] }, { "id": "830a1915f1ec3c49", "type": "mqtt in", "z": "156fbaa406ad8123", "name": "ESP32/tvoc", "topic": "ESP32/tvoc", "qos": "2", "datatype": "auto-detect", "broker": "a03b8463c0d7b983", "nl": false, "rap": true, "rh": 0, "inputs": 0, "x": 370, "y": 380, "wires": [ [ "a187927df009e949", "2759dc64eb94826a" ] ] }, { "id": "fb719ceab83b097f", "type": "mqtt in", "z": "156fbaa406ad8123", "name": "ESP32/sound", "topic": "ESP32/sound", "qos": "2", "datatype": "auto-detect", "broker": "a03b8463c0d7b983", "nl": false, "rap": true, "rh": 0, "inputs": 0, "x": 370, "y": 460, "wires": [ [ "7c6e3bf5c472d3e7", "3bb8702e06e15257" ] ] }, { "id": "9a7d31c60c80b677", "type": "ui_chart", "z": "156fbaa406ad8123", "name": "Temperature", "group": "f456dba3c69cf4bc", "order": 1, "width": 0, "height": 0, "label": "Temperature graph", "chartType": "line", "legend": "false", "xformat": "HH:mm:ss", "interpolate": "linear", "nodata": "", "dot": false, "ymin": "", "ymax": "", "removeOlder": 1, "removeOlderPoints": "", "removeOlderUnit": "3600", "cutout": 0, "useOneColor": false, "useUTC": false, "colors": [ "#1f77b4", "#aec7e8", "#ff7f0e", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5" ], "outputs": 1, "useDifferentColor": false, "className": "", "x": 550, "y": 300, "wires": [ [] ] }, { "id": "7c6e3bf5c472d3e7", "type": "ui_chart", "z": "156fbaa406ad8123", "name": "Sound", "group": "fa9c6e33a42140ac", "order": 1, "width": 0, "height": 0, "label": "Sound chart", "chartType": "line", "legend": "false", "xformat": "HH:mm:ss", "interpolate": "linear", "nodata": "", "dot": false, "ymin": "", "ymax": "", "removeOlder": 1, "removeOlderPoints": "", "removeOlderUnit": "3600", "cutout": 0, "useOneColor": false, "useUTC": false, "colors": [ "#1f77b4", "#aec7e8", "#ff7f0e", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5" ], "outputs": 1, "useDifferentColor": false, "className": "", "x": 530, "y": 460, "wires": [ [] ] }, { "id": "3bb8702e06e15257", "type": "debug", "z": "156fbaa406ad8123", "name": "debug 1", "active": true, "tosidebar": true, "console": false, "tostatus": false, "complete": "false", "statusVal": "", "statusType": "auto", "x": 540, "y": 500, "wires": [] }, { "id": "3804aaebb1665203", "type": "debug", "z": "156fbaa406ad8123", "name": "debug 2", "active": true, "tosidebar": true, "console": false, "tostatus": false, "complete": "false", "statusVal": "", "statusType": "auto", "x": 540, "y": 340, "wires": [] }, { "id": "2759dc64eb94826a", "type": "debug", "z": "156fbaa406ad8123", "name": "debug 3", "active": true, "tosidebar": true, "console": false, "tostatus": false, "complete": "false", "statusVal": "", "statusType": "auto", "x": 540, "y": 420, "wires": [] }, { "id": "a03b8463c0d7b983", "type": "mqtt-broker", "name": "ESP32", "broker": "localhost", "port": "1883", "clientid": "", "autoConnect": true, "usetls": false, "protocolVersion": "4", "keepalive": "60", "cleansession": true, "autoUnsubscribe": true, "birthTopic": "ESP32", "birthQos": "1", "birthRetain": "false", "birthPayload": "", "birthMsg": {}, "closeTopic": "", "closeQos": "0", "closeRetain": "false", "closePayload": "", "closeMsg": {}, "willTopic": "", "willQos": "0", "willRetain": "false", "willPayload": "", "willMsg": {}, "userProps": "", "sessionExpiry": "" }, { "id": "f6d1c6bb403af6e6", "type": "ui_group", "name": "TVOC", "tab": "8593b1ea584e9609", "order": 2, "disp": true, "width": "6", "collapse": false, "className": "" }, { "id": "f456dba3c69cf4bc", "type": "ui_group", "name": "Temperature", "tab": "8593b1ea584e9609", "order": 1, "disp": true, "width": "6", "collapse": false, "className": "" }, { "id": "fa9c6e33a42140ac", "type": "ui_group", "name": "Sound", "tab": "8593b1ea584e9609", "order": 3, "disp": true, "width": "6", "collapse": false, "className": "" }, { "id": "8593b1ea584e9609", "type": "ui_tab", "name": "Home", "icon": "dashboard", "order": 1, "disabled": false, "hidden": false } ]
 ```
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ CONCLUSION -->
-# :checkered_flag: 5. Conclusion
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 🏁 Conclusion
 
-This project successfully developed the infrastructure for a configurable indoor air quality monitoring system.
-Its modular architecture enables easy deployment and reconfiguration of devices, while the MQTT-based communication framework supports scalable integration of numerous clients.
-As a result, new monitoring devices can be added to the dashboard with minimal effort, providing a flexible and extensible solution for indoor environmental monitoring.
+The project demonstrates a **modular and configurable indoor air quality monitoring system** combining embedded firmware, wireless communication, MQTT, and real-time data visualization.
+
+The modular architecture allows additional sensor boards and monitoring devices to be integrated with minimal changes, while the MQTT-based communication framework provides a flexible foundation for expanding the system.
 
 
-<!-- ______________________________________________________________________________________________________________________________________________________ RESOURCES -->
-# :books: 5. Resources
+<!-- ______________________________________________________________________________________________________________________________________________________ -->
+# 📚 References
 
 - [ ESP32 datasheet ]( https://documentation.espressif.com/esp32-wroom-32_datasheet_en.pdf )
 - [ ATMEGA328P datasheet ]( https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf )
