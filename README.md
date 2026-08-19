@@ -17,7 +17,7 @@ The **battery-powered design** enables flexible deployment, while a custom **web
 
 **FIGURE: Project architecture**
 
-<img src="docs/introduction/project_architecture.jpeg" width="45%" height="auto">
+<img src="docs/introduction/project_architecture.png" width="100%" height="auto">
 
 
 <!-- ______________________________________________________________________________________________________________________________________________________ -->
@@ -48,12 +48,13 @@ The **battery-powered design** enables flexible deployment, while a custom **web
 <!-- ______________________________________________________________________________________________________________________________________________________ -->
 # 📄 System Architecture
 
-The system consists of two board types:
+The system is a **custom hardware and embedded software platform** consisting of two board types:
 
 * **Master board** – collects data from the slave boards and transmits it to the server.
 * **Slave boards** – acquire environmental data from connected sensors.
 
-Each board is built around its own microcontroller ( MCU ). Three boards were developed to validate the system: **one master board and two slave boards**.
+Each board is built around its own microcontroller ( MCU ).
+Three boards were developed to validate the system: **one master board and two slave boards**.
 
 
 <!-- ______________________________________________________________________________________________________________________________________________________ -->
@@ -269,184 +270,8 @@ Two UART commands are implemented:
 
 The ESP32 firmware is configured with the **Wi-Fi SSID**, **password**, and **MQTT broker IP address** to establish the network connection and publish sensor data through **MQTT**.
 
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// WIFI SETUP
-#include <WiFi.h>
-#include <PubSubClient.h>
-#include <Wire.h>
-
-const char* ssid        = "TO_BE_REPLACED"; // WiFi SSID
-const char* password    = "TO_BE_REPLACED"; // WiFi password
-const char* mqtt_server = "TO_BE_REPLACED"; // MQTT server
-
-WiFiClient   espClient;
-PubSubClient client( espClient );
-```
-
-The functions used for WiFi:
-
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// WIFI FUNCTIONS
-// This functions connects your ESP8266 to your router
-void setup_wifi() {
-    delay( 10 );
-    Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println( ssid );
-    Serial.print("Password used: ");
-    Serial.println( password );
-    WiFi.mode( WIFI_STA );
-    WiFi.begin( ssid, password );
-    while( WiFi.status() != WL_CONNECTED )
-    {
-        delay( 500 );
-        Serial.print( "." );
-    }
-    Serial.println("");
-    Serial.print( "WiFi connected - ESP IP address: " );
-    Serial.println( WiFi.localIP() );
-}
-
-// This function is executed when some device publishes a message to a topic that your ESP8266 is subscribed to
-// Change the function below to add logic to your program, so when a device publishes a message to a topic that
-// your ESP8266 is subscribed you can actually do something
-void callback( String topic, byte* message, unsigned int length )
-{
-    Serial.print( "Message arrived on topic: " );
-    Serial.println( topic );
-}
-
-// This functions reconnects your ESP8266 to your MQTT broker
-// Change the function below if you want to subscribe to more topics with your ESP8266
-void reconnect()
-{
-    while( !client.connected() )
-    {
-        Serial.print( "Attempting MQTT connection..." );
-        if( client.connect( "ESP8266Client" ) )
-        {
-            Serial.println( "connected" );
-        }
-        else
-        {
-            Serial.print( "failed, rc=" );
-            Serial.print( client.state() );
-            Serial.println( " try again in 5 seconds" );
-            delay( 5000 );
-        }
-    }
-}
-```
-
-The serial communication can be configured by modifying the following macros:
-
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SERIAL COMM SETUP
-// general macros
-#define TRUE                                        true
-#define FALSE                                       false
-
-#define SERIAL_1_BAUDRATE                           115200
-#define SERIAL_2_BAUDRATE                           115200
-
-#define ESP_MASTER_RX_PIN                           15
-#define ESP_MASTER_TX_PIN                           2
-
-#define UART_CHECK_COUNTER_MAX                      10
-#define UART_TIMEOUT_COUNTER_MAX                    50
-
-#define UART_END_BYTE				                0x55
-
-// command list
-#define UART_CMD_READ_SENSORS_STATUS		        0x10
-#define UART_CMD_READ_SENSORS_DATA		            0x20
-
-// flags pos
-#define SENSOR_TEMP_SUPPORTED                       0x01
-#define SENSOR_TVOC_SUPPORTED                       0x02
-#define SENSOR_SOUND_SUPPORTED                      0x04
-
-#define UART_REQUEST_CMD_MAX_LENGTH	                2
-#define UART_RESPONSE_READ_DATA_MAX_LENGTH	        8
-#define UART_RESPONSE_INIT_CMD_MAX_LENGTH	        4
-
-#define UART_READ_BUFFER_LENGTH		                10
-#define UART_WRITE_BUFFER_LENGTH		            5
-
-// sensor flag position
-#define SENSOR_TEMP_SUPPORTED                       0x01
-#define SENSOR_TVOC_SUPPORTED                       0x02
-#define SENSOR_SOUND_SUPPORTED                      0x04
-
-// UART flags structure
-typedef union
-{
-    struct{
-        uint8_t is_busy                 :1,
-                sensor_temp_supported   :1,
-                sensor_tvoc_supported   :1,
-                sensor_sound_supported  :1,
-                                        :4;
-    };
-
-    uint8_t word8;
-}UART_COM_FLAGS;
-
-// UART main structure
-typedef struct
-{
-	uint8_t write_buffer[UART_WRITE_BUFFER_LENGTH];
-	uint8_t read_buffer[UART_READ_BUFFER_LENGTH];
-	uint8_t buffer_counter;
-
-    uint8_t check_counter;
-    uint8_t timeout_counter;
-
-    UART_COM_FLAGS flags;
-}UART_COM_STRUCT;
-
-UART_COM_STRUCT UART_com;
-```
-
 At startup, the master sends **`UART_CMD_READ_SENSORS_STATUS`** to retrieve the slave board's supported sensors.
 If no valid response is received within the configured timeout, the master enters the **timeout state** and halts operation.
-
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETUP FUNCTION
-void init_com_protocol_UART()
-{
-    UART_com.flags.word8     = 0x00;
-    UART_com.flags.is_busy   = TRUE;
-    UART_com.timeout_counter = UART_TIMEOUT_COUNTER_MAX;
-    UART_com.check_counter   = UART_CHECK_COUNTER_MAX;
-    UART_com.buffer_counter  = 0;
-    UART_com.write_buffer[0] = UART_CMD_READ_SENSORS_STATUS;
-    UART_com.write_buffer[1] = UART_END_BYTE;
-    Serial2.write( UART_com.write_buffer, 2 );
-}
-```
-
-The WiFi and the serial communications are initialized in the setup functions:
-
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETUP FUNCTION
-void setup() {
-    // setup the serial comms
-    Serial.begin(  SERIAL_1_BAUDRATE );
-    Serial2.begin( SERIAL_2_BAUDRATE, SERIAL_8N1, ESP_MASTER_RX_PIN, ESP_MASTER_TX_PIN );
-    delay( 4000 );
-
-    // prepare wifi config
-    setup_wifi();
-    client.setServer( mqtt_server, 1883 );
-    client.setCallback( callback );
-
-    // init the serial config
-    init_com_protocol_UART();
-
-    Serial.println( "data sent" );
-}
-```
 
 The master periodically sends the **`UART_CMD_READ_SENSORS_DATA`** command to acquire sensor measurements.
 Upon receiving a valid response, it publishes the data to the MQTT broker according to the slave board's configuration.
@@ -636,66 +461,6 @@ The following functions are responsible for acquiring data from the correspondin
         return ( int16_t )( temp_sensor_ADT7410.readTempC() * 10 );
     }
 #endif
-```
-
-The function below initializes all **configured sensors**.
-
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// INIT ALL SENSOR CONFIG
-void init_all_sensor_config()
-{
-#ifdef USE_SENSOR_TVOC_MQ2
-    pinMode( SENSOR_TVOC_MQ2_PIN, INPUT );
-#endif
-#ifdef USE_SENSOR_TEMP_DS18B20
-    pinMode( SENSOR_TEMP_DS18B20_PIN, INPUT );
-#endif
-#ifdef USE_SENSOR_SOUND_LM393
-    pinMode( SENSOR_SOUND_LM393_PIN, INPUT );
-#endif
-#ifdef USE_SENSOR_TEMP_ADT7410
-    if( !temp_sensor_ADT7410.begin() )
-    {
-        Serial.println( "Couldn't find ADT7410!" );
-        // while( 1 );
-    }
-#endif
-}
-```
-
-Serial communication is configured using the following macros:
-
-``` c
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SERIAL MACROS AND VARIABLES
-// general macros used
-#define UART_REQUEST_CMD_MAX_LENGTH                 2
-#define UART_RESPONSE_CMD_MAX_LENGTH                4
-#define UART_CMD_BYTE_POS                           0
-#define UART_END_BYTE_POS                           1
-#define UART_END_BYTE                               0x55
-
-// commands used
-#define UART_CMD_READ_SENSORS_STATUS                0x10
-#define UART_CMD_READ_SENSORS_DATA                  0x20
-
-// flag positions
-#define SENSOR_TEMP_SUPPORTED                       0x01
-#define SENSOR_TVOC_SUPPORTED                       0x02
-#define SENSOR_SOUND_SUPPORTED                      0x04
-
-// length of buffers
-#define UART_READ_BUFFER_LENGTH                     5
-#define UART_WRITE_BUFFER_LENGTH                    5
-
-typedef struct
-{
-	uint8_t write_buffer[UART_WRITE_BUFFER_LENGTH];
-	uint8_t read_buffer[UART_READ_BUFFER_LENGTH];
-
-	uint8_t buffer_counter;
-}SERIAL_COM;
-
-SERIAL_COM serial_com;
 ```
 
 The **UART interface is initialized at 115200 baud**, and all configured sensors are initialized at startup.
