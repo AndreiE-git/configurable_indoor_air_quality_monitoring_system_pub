@@ -1,6 +1,6 @@
 
 <div align="center">
-    <img src="docs/introduction/device_introduction.png" alt="Configurable indoor air quality monitoring device in its 3D-printed enclosure" width="100%" height="auto">
+    <img src="docs/introduction/device_introduction.png" alt="Configurable Indoor Air Quality Monitoring System" width="100%" height="auto">
     <p><em>A battery-powered, configurable air quality monitor: custom schematics and PCB layout designed, master–slave firmware over a custom UART protocol, MQTT over Wi-Fi, a Node-RED dashboard for live visualization, and a 3D-printed enclosure.</em></p>
     <p>
         <img src="https://img.shields.io/badge/Embedded_C++-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="Embedded C++">
@@ -10,7 +10,6 @@
         <img src="https://img.shields.io/badge/MQTT-IoT_Telemetry-660066?style=flat-square&logo=mqtt&logoColor=white" alt="MQTT IoT telemetry">
         <img src="https://img.shields.io/badge/Node--RED-Dashboard-8F0000?style=flat-square&logo=nodered&logoColor=white" alt="Node-RED dashboard">
     </p>
-    <h1>Configurable Indoor Air Quality Monitoring System <br>( 2023 )</h1>
 </div>
 
 
