@@ -1,7 +1,16 @@
 
 <div align="center">
+    <img src="docs/introduction/device_introduction.png" alt="Configurable indoor air quality monitoring device in its 3D-printed enclosure" width="100%" height="auto">
+    <p><em>A battery-powered, configurable air quality monitor: custom schematics and PCB layout designed, master–slave firmware over a custom UART protocol, MQTT over Wi-Fi, a Node-RED dashboard for live visualization, and a 3D-printed enclosure.</em></p>
+    <p>
+        <img src="https://img.shields.io/badge/Embedded_C++-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="Embedded C++">
+        <img src="https://img.shields.io/badge/Architecture-Modular-2E7D32?style=flat-square" alt="Modular architecture">
+        <img src="https://img.shields.io/badge/ESP32-Wi--Fi_·_Master-E7352C?style=flat-square&logo=espressif&logoColor=white" alt="ESP32 Wi-Fi master">
+        <img src="https://img.shields.io/badge/ATmega328P-Sensor_Slaves-00878F?style=flat-square&logo=arduino&logoColor=white" alt="ATmega328P sensor slaves">
+        <img src="https://img.shields.io/badge/MQTT-IoT_Telemetry-660066?style=flat-square&logo=mqtt&logoColor=white" alt="MQTT IoT telemetry">
+        <img src="https://img.shields.io/badge/Node--RED-Dashboard-8F0000?style=flat-square&logo=nodered&logoColor=white" alt="Node-RED dashboard">
+    </p>
     <h1>Configurable Indoor Air Quality Monitoring System <br>( 2023 )</h1>
-    <img src="docs/introduction/introduction.jpeg" width="65%" height="auto">
 </div>
 
 
